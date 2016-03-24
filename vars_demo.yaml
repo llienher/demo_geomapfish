@@ -2,12 +2,12 @@ extends: CONST_vars.yaml
 
 vars:
     # database name
-    db: demo_geomapfish_1_6
+    db: xmy
     # database schema
     schema: main
 
     # the visible host name
-    host: geomapfish-demo.camptocamp.net
+    host: geomapfish-workshop.camptocamp.net
 
     srid: 21781
 
