@@ -12,6 +12,8 @@ vars:
     modwsgi_user: www-data
     # url-path where the instance must respond.
     apache_entry_point: APACHE_ENTRY_POINT
+    # Docker base image name (comes from the makefile).
+    docker_base: DOCKER_BASE
     # database user
     dbuser: www-data
     # database password
@@ -70,7 +72,7 @@ vars:
         root_dir: "{directory}"
 
     # used for the "node_modules" and "closure" static views
-    closure_library_path: 'process.stdout.write(require("openlayers/node_modules/closure-util").getLibraryPath())'
+    closure_library_path: 'process.stdout.write(require("closure-util").getLibraryPath())'
     node_modules_path: "{directory}/node_modules"
 
     # pyramid_closure configuration
@@ -82,9 +84,11 @@ vars:
     pyramid_closure:
         roots_with_prefix:
         - ["{closure_library_path}/closure/goog", "{closure_library_path}/closure/goog"]
-        - ["{package}:static/js", "{directory}/{package}/static/js"]
-        - ["{node_modules_path}/openlayers", "{node_modules_path}/openlayers"]
+        - ["{package}:static-ngeo/js", "{directory}/{package}/static-ngeo/js"]
+        - ["{node_modules_path}/openlayers/src", "{node_modules_path}/openlayers/src"]
+        - ["{node_modules_path}/openlayers/build", "{node_modules_path}/openlayers/build"]
         - ["{node_modules_path}/ngeo/src", "{node_modules_path}/ngeo/src"]
+        - ["{node_modules_path}/ngeo/contribs/gmf/src", "{node_modules_path}/ngeo/contribs/gmf/src"]
 
     # The application's default language. This is the language used by
     # the application if no specific language is specified in the URLs.
@@ -96,6 +100,13 @@ vars:
     - en
     - fr
     - de
+
+    # All the application interfaces (except Sencha touch), used to create the apache rewrite rules
+    interfaces:
+    - main
+    - mobile
+    - edit
+    - routing
 
     # The dogpile.cache configuration.
     #
@@ -127,7 +138,23 @@ vars:
 
     # The list of available variable names for the `UI metadatas` form.
         available_metadata:
-        - copy_to
+        - copyTo
+        - legendRule
+        - isLegendExpanded
+        - metadataUrl
+        - disclaimer
+        - isChecked
+        - identifierAttributeField
+        - maxResolution
+        - legend
+        - minResolution
+        - thumbnail
+        - wmsUrl
+        - wfsUrl
+        - queryLayers
+        - wmsLayers
+        - minResolutionHint
+        - maxResolutionHint
 
     # The list of functionalities that can be configured
     # through the admin interface.
@@ -213,7 +240,7 @@ vars:
 
     # The "raster web services" configuration. See the "raster"
     # chapter in the integrator documentation.
-    raster:
+    raster: {}
 
     # Used by enumeration in the query builder
     layers:
@@ -251,11 +278,17 @@ vars:
     #proxies:
     #    http: http://someproxy
 
+    # Control the HTTP headers
+    headers:
+        ngeo_index:
+            access_control_max_age: 600 # 10 minutes
+        mapserver:
+            access_control_allow_origin: ["*"]
 
     # Checker configuration
     checker:
         fulltextsearch: text to search
-        lang_files: [cgxp, cgxp-api]
+        lang_files: [ngeo, cgxp, cgxp-api]
         themes:
             default:
                 params:
@@ -296,6 +329,8 @@ vars:
               display: WMS capabilities
             - name: checker_wfscapabilities
               display: WFS capabilities
+            - name: checker_js_generic
+              display: PhantomJS generic test
             main:
             - name: checker_main
               display: Main page
@@ -307,6 +342,8 @@ vars:
               display: Print capabilities
             - name: checker_fts
               display: FullTextSearch
+            - name: checker_js_generic
+              display: PhantomJS generic test
             default: # for children
             - name: checker_viewer
               display: Viewer script
@@ -314,6 +351,25 @@ vars:
         - display: demo
           url: http://{host}/{instanceid}/wsgi
           type: main
+
+    # What web page is authorized to use the API
+    authorized_referers:
+    - "http://{host}/{instanceid}"
+    - "https://{host}/{instanceid}"
+    - "http://{host}:8480/{instanceid}"
+    - "https://{host}:8480/{instanceid}"
+
+    # Hooks that can be called at different moments in the life of the
+    # application. The value is the full python name
+    # (full.module.path.function_name) of the function to call
+    hooks: {}
+      # after_settings: demo.after_settings_hook
+      #   Called just after the settings have been loaded. Allows to modify
+      #   the settings at runtime (they are constructed at build time).
+      #   The function receives one parameter: the settings object.
+
+    # Statistics are disabled by default
+    stats: {}
 
 interpreted:
     python:
@@ -323,4 +379,10 @@ interpreted:
     environment:
     - instanceid
     - apache_entry_point
+    - docker_base
     - development
+    node:
+        vars:
+        - closure_library_path
+        cmd: ["node", "-e"]
+        ignore_error: true

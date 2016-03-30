@@ -1,0 +1,2 @@
+CREATE SCHEMA main;
+CREATE SCHEMA main_static;

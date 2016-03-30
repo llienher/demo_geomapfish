@@ -40,3 +40,11 @@
 /demo/static/mobile/openlayers-mobile.js
 /demo/static/mobile/bootstrap.js
 /demo/static/mobile/bootstrap.json
+/print/print-servlet.war
+/.tx/ngeo.gmf-*
+/c2cgeoportal/scaffolds/
+/demo/static-ngeo/build/
+/demo/static-ngeo/fonts/gmf-icons.*
+/demo/static-ngeo/fonts/fontawesome-webfont.*
+/demo/version.py
+/node_modules
