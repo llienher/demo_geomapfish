@@ -1,6 +1,118 @@
 This file includes migration steps for each release of c2cgeoportal.
 
 
+Version 2.0.0
+=============
+
+This changelog considers that you don't currently use an ngeo interface and you
+replace your sencha touch interface by an ngeo interface.
+
+1. Get the new and heavily modified files for ngeo integration:
+
+    at that point, the following folder should exist: /tmp/demo_geomapfish/
+
+    cp /tmp/demo_geomapfish/.jshintrc .
+    cp /tmp/demo_geomapfish/build.mako.json .
+    cp /tmp/demo_geomapfish/package.json .
+    cp /tmp/demo_geomapfish/templatecache.mako.js .
+    cp /tmp/demo_geomapfish/lingua-client.cfg .
+    cp /tmp/demo_geomapfish/lingua-server.cfg .
+    cp /tmp/demo_geomapfish/apache/wsgi.conf.mako apache/
+    cp /tmp/demo_geomapfish/demo/static-ngeo demo/
+    cp /tmp/demo_geomapfish/demo/templates/mobile.html demo/templates/
+
+2. Remove the no longer used files:
+
+    git rm lingua.cfg
+    git rm -r demo/static/mobile/
+    git rm print/print-servlet.war
+
+3. Add in the `.gitignore` file:
+
+    + /print/print-servlet.war
+    + /.tx/ngeo.gmf-*
+    + /c2cgeoportal/scaffolds/
+    + /demo/static-ngeo/build/
+    + /demo/static-ngeo/fonts/gmf-icons.*
+    + /demo/static-ngeo/fonts/fontawesome-webfont.*
+    + /demo/version.py
+
+4. In the `vars_demo.yaml` file:
+
+   * Remove the `vars.checker.lang_files` parameter to use the default value
+     that checks the ngeo language files.
+
+5. In the `demo/__init__.py` file:
+
+   * If your project's main function includes `config.include("pyramid_closure")`,
+     remove it, as c2cgeoportal now takes care of including `pyramid_closure`.
+
+   * Use the ngeo interface for the mobile by doing this changes:
+
+     - from c2cgeoportal import locale_negotiator, add_interface, \
+     -     INTERFACE_TYPE_SENCHA_TOUCH, INTERFACE_TYPE_NGEO
+     + from c2cgeoportal import locale_negotiator, add_interface, INTERFACE_TYPE_NGEO
+
+     ...
+
+     - add_interface(config, "mobile", INTERFACE_TYPE_SENCHA_TOUCH)
+     + add_interface(config, "mobile", INTERFACE_TYPE_NGEO)
+
+6. To migrate your theme from version 1 to version 2 a script is available.
+   Use `.build/venv/bin/themev1tov2 --help` for more information.
+
+7. If you have set the `cache_control` in your `vars_demo.yaml` file,
+   rename 'cache_control' to 'headers' and 'max_age' to
+   'cache_control_max_age':
+
+   -  cache_control:
+   -      "<service_name>":
+   -          "max_age": <max_age>
+   +  headers:
+   +      "<service_name>":
+   +          "cache_control_max_age": <max_age>
+
+   If you don't have a `cache_control` you should also add the following lines:
+
+   +  headers:
+   +      "<service_name>":
+   +          "cache_control_max_age": <max_age>
+
+8. A new checker has been added to test for javascript error. If you have
+   overridded the checker list in your `vars_demo.yaml` file, you must
+   add it.
+
+    # Check collector configuration
+    check_collector:
+        disabled: [checker_printcapabilities, checker_pdf]
+        check_type:
+            all:
+    ...
+   +         - name: checker_js_generic
+   +           display: PhantomJS generic test
+            main:
+    ...
+   +         - name: checker_js_generic
+   +           display: PhantomJS generic test
+
+9. In the `demo/templates/(index|edit|routing).html` files do the following change:
+
+     <input id="password" name="password" type="password" autocomplete="on"/>
+    +<input id="oldPassword" name="oldPassword" type="password" />
+     <input id="newPassword" name="newPassword" type="password" />
+
+
+Version 1.6.8
+=============
+
+1. In the file `print/WEB-INF/classes/logback.xml.mako` do the following replacement:
+
+    - <file>build/logs/logFile.log</file>
+    + <file>logs/${instanceid}.log</file>
+    - <fileNamePattern>build/logs/logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+    + <fileNamePattern>logs/${instanceid}.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+
 Version 1.6.7
 =============
 
@@ -245,6 +357,10 @@ Version 1.6.3
     + /deploy/hooks/pre-restore-database
 
 
+11. In the PDF report config the show_map attribute will be removed and a map is added in the config hierarchy.
+    See the doc to update your config: http://docs.camptocamp.net/c2cgeoportal/master/integrator/pdfreport.html
+
+
 Version 1.6.2
 =============
 
@@ -266,6 +382,18 @@ Version 1.6.2
 
 3. In the `demo/__init__.py` file remove all the `config.add_settings({ ... })`, they should be in the `vars_*.yaml` files.
 
+
+   In the `vars_*.yaml` file, the `closure_library_path` configuration variable and the entry in the `interpreted`
+   section can be removed:
+
+     closure_library_path: 'process.stdout.write(require("openlayers/node_modules/closure-util").getLibraryPath())'
+
+     node:
+        vars:
+        - closure_library_path
+        cmd: ["node", "-e"]
+
+   It is now directly defined in the CONST_vars.yaml file.
 
 Version 1.6
 ===========

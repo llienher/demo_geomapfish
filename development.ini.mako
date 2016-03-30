@@ -5,8 +5,6 @@ pyramid.debug_authorization = false
 pyramid.debug_notfound = true
 pyramid.debug_routematch = false
 pyramid.debug_templates = true
-pyramid.includes =
-    pyramid_debugtoolbar
 mako.directories = demo:templates
     c2cgeoportal:templates
 app.cfg = %(here)s/.build/config.yaml
