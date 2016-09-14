@@ -13,10 +13,7 @@ addons:
 env:
   matrix:
     - PIP='pip==5.0.0'
-    - PIP='pip==4.0.0'
-    - PIP='pip==5.0.0'
-    - PIP='pip==2.0.0'
-    - PIP='pip==1.0.0'
+    - PIP='pip==6.0.0'
 
 script:
 - virtualenv --no-site-packages .
