@@ -10,9 +10,17 @@ addons:
     packages:
     - python-virtualenv
 
+env:
+  matrix:
+    - PIP='pip==5.0.0'
+    - PIP='pip==4.0.0'
+    - PIP='pip==5.0.0'
+    - PIP='pip==2.0.0'
+    - PIP='pip==1.0.0'
+
 script:
 - virtualenv --no-site-packages .
 - bin/pip freeze
-- bin/pip install 'pip==5.0.0'
+- bin/pip install $PIP
 - bin/pip install flake8
 - bin/flake8 -v demo
