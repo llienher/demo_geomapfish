@@ -12,4 +12,5 @@ addons:
     - python-virtualenv
 
 script:
-- make -f travis.mk checks
+- pip install flake8
+- .build/venv/bin/flake8 demo
