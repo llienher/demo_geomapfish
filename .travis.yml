@@ -12,6 +12,8 @@ addons:
     - python-virtualenv
 
 script:
-- virtualenv .
+- flake8 demo
+- virtualenv --no-site-packages .
+- bin/pip install 'pip==8.1.2' 'setuptools==21.1.0'
 - bin/pip install flake8
 - bin/flake8 demo
