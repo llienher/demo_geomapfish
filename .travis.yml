@@ -12,6 +12,7 @@ addons:
 
 script:
 - virtualenv --no-site-packages .
-- bin/pip install 'pip==8.1.2'
+- bin/pip freeze
+- bin/pip install 'pip==7.1.2'
 - bin/pip install flake8
 - bin/flake8 demo
