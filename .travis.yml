@@ -15,4 +15,4 @@ script:
 - bin/pip freeze
 - bin/pip install 'pip==7.1.2'
 - bin/pip install flake8
-- bin/flake8 demo
+- bin/flake8 -v demo
