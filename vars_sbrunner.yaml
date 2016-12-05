@@ -1,0 +1,4 @@
+extends: vars_demo.yaml
+vars:
+    # database name
+    db: demo_geomapfish_1_6_printv2

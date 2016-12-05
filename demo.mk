@@ -5,7 +5,7 @@ VARS_FILE = vars_demo.yaml
 VARS_FILES += ${VARS_FILE}
 endif
 
-PRINT_VERSION ?= 3
+PRINT_VERSION ?= 2
 APACHE_VHOST ?= gmfusrgrp_version2-geomapfishtest
 
 PRINT_REQUIREMENT += print/WEB-INF/classes/mapfish-spring-application-context-override.xml
