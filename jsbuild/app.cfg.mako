@@ -51,7 +51,7 @@ root = [
 ]
 %>
 
-[app.js]
+[desktop.js]
 root =
     ${"\n    ".join(root)}
 first =

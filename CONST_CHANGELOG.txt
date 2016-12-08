@@ -1,6 +1,250 @@
 This file includes migration steps for each release of c2cgeoportal.
 
 
+Version 2.1.0
+=============
+
+If you upgrade from the version 1.6.x be careful to apply the steps for the version 2.0 first.
+
+In recent versions of GeoMapFish, `CGXP` has been replaced by `ngeo` to propose
+a more modern interface to the end user. It is still possible to keep using
+`CGXP` though.
+
+If you want to keep the `CGXP` interface please read the following
+documentation and then move directly to step 4:
+https://camptocamp.github.io/c2cgeoportal/2.0/integrator/legacy_cgxp.html
+
+After you upgrade the application you can use the following scripts to help you on upgrade
+your data from CGXP to ngeo:
+* `.build/venv/bin/themev1tov2` to migrate the themes
+* `.build/venv/bin/l10nv1tov2` to migrate the localisation files (language strings)
+Use the `--help` argument for more information.
+
+You should also add a Layer group named 'background' with the background layers.
+
+
+1. Get the new files for ngeo integration:
+
+    cp CONST_create_template/demo/templates/desktop.html demo/templates/
+    cp CONST_create_template/demo/static-ngeo/less/desktop.less demo/static-ngeo/less
+    cp CONST_create_template/demo/static-ngeo/js/desktop.js demo/static-ngeo/js
+    cp -r CONST_create_template/demo/static-ngeo/components demo/static-ngeo/
+
+2. Remove the cgxp interfaces:
+
+    git rm demo/templates/index.html
+    git rm demo/templates/viewer.js
+    git rm demo/templates/edit.html
+    git rm demo/templates/edit.js
+    git rm demo/templates/routing.html
+    git rm demo/templates/routing.js
+
+3. In the `demo/__init__.py` do the following replacement:
+
+    - add_interface(config)
+    - add_interface(config, "edit")
+    - add_interface(config, "routing")
+    + add_interface(config, "desktop", INTERFACE_TYPE_NGEO)
+
+4. Remove the no longer used files:
+
+    git rm CONST_versions.txt
+    git rm .jshintrc
+
+5. Get the new and heavily modified files for ngeo integration:
+
+    cp CONST_create_template/apache/wsgi.conf.mako apache/
+
+6. The less build is simplified (be careful it you customise your style):
+
+    git rm demo/static-ngeo/less/mobile-build.less
+    cp CONST_create_template/demo/static-ngeo/less/mobile.less demo/static-ngeo/less
+
+7. The checkers will be refactored, you should do at least the following
+   change in your vars_demo.yaml:
+      checker:
+    -     fulltextsearch: text to search
+    -     print_spec:
+    -         layout: "1 A4 portrait"
+    -         outputFormat: "pdf"
+    -         attributes:
+    -             title: ""
+    -             comments: ""
+    -             datasource: []
+    -             map:
+    -                 projection: "EPSG:21781"
+    -                 dpi: 254
+    -                 rotation: 0
+    -                 center: [600000, 200000]
+    -                 scale: 100000
+    -                 longitudeFirst: true
+    -                 layers: []
+    -             legend: {}
+    +     defaults:
+    +         routes_disable: []
+    +         fulltextsearch: text to search
+    +         print_spec:
+    +             layout: "1 A4 portrait"
+    +             outputFormat: "pdf"
+    +             attributes:
+    +                 title: ""
+    +                 comments: ""
+    +                 datasource: []
+    +                 map:
+    +                     projection: "EPSG:21781"
+    +                     dpi: 254
+    +                     rotation: 0
+    +                     center: [600000, 200000]
+    +                     scale: 100000
+    +                     longitudeFirst: true
+    +                     layers: []
+    +                 legend: {}
+    +     all:
+    +         routes_disable: []
+      check_collector:
+    +     disabled: []
+          hosts: []
+    ...
+      update_paths:
+    ...
+    - - checker
+    + - checker.defaults
+    + - checker.all
+    + - check_collector.disabled
+      - check_collector.hosts
+
+8. In your vars_demo.yaml file remove the host entry.
+
+9. In your demo.mk add the following lines:
+
+   + VISIBLE_WEB_HOST ?= example.com
+   +
+   + # Deploy branch
+   + DEPLOY_BRANCH_DIR ?= /var/www/vhosts/$(APACHE_VHOST)/private/deploybranch
+   + GIT_REMOTE_URL ?= git@github.com:camptocamp/demo.git
+   + DEPLOY_BRANCH_BASE_URL ?= $(VISIBLE_PROTOCOL)://$(VISIBLE_HOST)
+   + DEPLOY_BRANCH_MAKEFILE ?= demo.mk
+
+   Where 'example.com' is the hostname use in the browser to open the application
+
+10. In your vars_demo.yaml file rename `mobile_default_theme` to `default_theme`.
+
+11. In your demo/__init__.py do the following change:
+
+    -from c2cgeoportal import locale_negotiator, add_interface, INTERFACE_TYPE_NGEO
+    +from c2cgeoportal.pyramid_ import locale_negotiator, add_interface, INTERFACE_TYPE_NGEO
+
+12. The TileCloud chain config file format change a little bit, the main change to do is:
+
+    -layer_default:
+    -    ...
+    +defaults:
+    +    layer: &layer
+    +        ...
+
+    and for all `layers:`
+
+     layers:
+         name:
+    +       <<: *layer
+            ...
+
+    And if the dimensions are a number like 2016 they should be quoted => '2016'.
+
+    example: https://github.com/camptocamp/demo_geomapfish/commit/158c53b5f16c230744f0b101bb3b42a88a0bf969
+
+13. To pre upgrade the database, run:
+
+    make -f <user>.mk .build/venv/bin/alembic alembic.ini production.ini .build/config.yaml
+    .build/venv/bin/alembic --config alembic.ini upgrade 7d271f4527cd
+    .build/venv/bin/treeitem_uniquename
+
+14. In the database we have added some restrictions, have a look here for more information:
+    https://github.com/camptocamp/c2cgeoportal/issues/2568
+
+
+Version 2.0.0
+=============
+
+This changelog considers that you do not currently use an ngeo interface and you
+replace your sencha touch interface by an ngeo interface.
+
+1. Get the new and heavily modified files for ngeo integration:
+
+    at that point, the following folder should exist: CONST_create_template
+
+    cp CONST_create_template/lingua-client.cfg .
+    cp CONST_create_template/lingua-server.cfg .
+    cp CONST_create_template/apache/wsgi.conf.mako apache/
+    cp -r CONST_create_template/demo/static-ngeo demo/
+    cp CONST_create_template/demo/templates/mobile.html demo/templates/
+
+2. Remove the no longer used files:
+
+    git rm lingua.cfg
+    git rm -r demo/static/mobile/
+    git rm jsbuild/mobile.cfg
+    git rm print/print-servlet.war
+
+3. Add in the `.gitignore` file:
+
+    + /node_modules/
+    + /print/print-servlet.war
+    + /.tx/config
+    + /.tx/ngeo.gmf-*
+    + /demo/static-ngeo/build/
+    + /demo/static-ngeo/fonts/gmf-icons.*
+    + /demo/static-ngeo/fonts/fontawesome-webfont.*
+    + /demo/version.py
+    + /mapserver/replace_db.sh
+    + /testDB/11-schemas.sql
+    + /testDB/12-alembic.sql
+    + /testDB/13-alembic-static.sql
+    * /testDB/Dockerfile
+    + /.whiskey/action_hooks/pre-build
+
+4. In the `vars_demo.yaml` file:
+
+   * Remove the `vars.checker.lang_files` parameter to use the default value
+     that checks the ngeo language files.
+
+5. In the `demo/__init__.py` file:
+
+   * If your project's main function includes `config.include("pyramid_closure")`,
+     remove it, as c2cgeoportal now takes care of including `pyramid_closure`.
+
+   * Use the ngeo interface for the mobile by doing this changes:
+
+     - from c2cgeoportal import locale_negotiator, add_interface, \
+     -     INTERFACE_TYPE_SENCHA_TOUCH, INTERFACE_TYPE_NGEO
+     + from c2cgeoportal import locale_negotiator, add_interface, INTERFACE_TYPE_NGEO
+
+     ...
+
+     - add_interface(config, "mobile", INTERFACE_TYPE_SENCHA_TOUCH)
+     + add_interface(config, "mobile", INTERFACE_TYPE_NGEO)
+
+6. If you have set the `cache_control` in your `vars_demo.yaml` file,
+   rename 'cache_control' to 'headers' and 'max_age' to
+   'cache_control_max_age':
+
+   -  cache_control:
+   -      "<service_name>":
+   -          "max_age": <max_age>
+   +  headers:
+   +      "<service_name>":
+   +          "cache_control_max_age": <max_age>
+
+7. On the `demo/models.py` remove the following lines:
+
+    - LayerInternalWMS.__acl__ = [DENY_ALL]
+    - LayerExternalWMS.__acl__ = [DENY_ALL]
+    - LayerWMTS.__acl__ = [DENY_ALL]
+    - WMTSDimension.__acl__ = [DENY_ALL]
+
+8. It is not allowed anymore to have layers directly in a theme.
+
+
 Version 1.6.8
 =============
 
@@ -91,7 +335,7 @@ Version 1.6.6
 1. Now the files `apache/mapcache.xml` and `apache/tiles.conf` are generated automatically,
    then you can remove your custom build rules.
 
-   If you don't use tilecloud-chain and you don't have a `tilegeneration/config.yaml` configuration
+   If you do not use tilecloud-chain and you do not have a `tilegeneration/config.yaml` configuration
    file, you must disable it by setting the following parameter in your Makefile:
 
    `TILECLOUD_CHAIN ?= FALSE`
@@ -261,6 +505,10 @@ Version 1.6.3
     + /deploy/hooks/pre-restore-database
 
 
+11. In the PDF report config the show_map attribute will be removed and a map is added in the config hierarchy.
+    See the doc to update your config: http://docs.camptocamp.net/c2cgeoportal/master/integrator/pdfreport.html
+
+
 Version 1.6.2
 =============
 
@@ -282,6 +530,18 @@ Version 1.6.2
 
 3. In the `demo/__init__.py` file remove all the `config.add_settings({ ... })`, they should be in the `vars_*.yaml` files.
 
+
+   In the `vars_*.yaml` file, the `closure_library_path` configuration variable and the entry in the `interpreted`
+   section can be removed:
+
+     closure_library_path: 'process.stdout.write(require("openlayers/node_modules/closure-util").getLibraryPath())'
+
+     node:
+        vars:
+        - closure_library_path
+        cmd: ["node", "-e"]
+
+   It is now directly defined in the CONST_vars.yaml file.
 
 Version 1.6
 ===========

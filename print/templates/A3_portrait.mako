@@ -8,7 +8,7 @@
     #-------------------------------------------------------------------------
     mainPage:
       pageSize: A3
-      ${self.backgroundPdf()} 
+      backgroundPdf: '<%text>$</%text>{configDir}/tpl_demo_A3_portrait.pdf'
       rotation: true
       items:
         - !map

@@ -8,7 +8,7 @@
     #-------------------------------------------------------------------------
     mainPage:
       pageSize: A4
-      backgroundPdf: '<%text>$</%text>{configDir}/tpl_puidoux_A4_landscape.pdf'
+      backgroundPdf: '<%text>$</%text>{configDir}/tpl_demo_A4_landscape.pdf'
       landscape: true
       rotation: true
       items:
@@ -182,7 +182,7 @@
                 paddingTop: 9
           items:
             - !text
-              text: 'Puidoux, le <%text>$</%text>{now dd.MM.yyyy}'
+              text: 'Lausanne, le <%text>$</%text>{now dd.MM.yyyy}'
               fontSize: 6
         # Date
         #- !columns
@@ -286,7 +286,7 @@
 
 #    lastPage:
 #      pageSize: A4
-##      backgroundPdf: '<%text>$</%text>{configDir}/tpl_puidoux.pdf'
+##      backgroundPdf: '<%text>$</%text>{configDir}/tpl_demo.pdf'
 #      marginTop: 150
 #      items:
 #        - !text

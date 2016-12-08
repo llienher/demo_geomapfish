@@ -1,0 +1,120 @@
+#
+# German translations for PACKAGE package
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE 1.0\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Lingua 4.11\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Add a layer"
+msgstr ""
+
+msgid "Add a sub theme"
+msgstr ""
+
+msgid "Add a theme"
+msgstr ""
+
+msgid "Administration"
+msgstr ""
+
+msgid "Administrative buildings"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Background"
+msgstr ""
+
+msgid "Cadastre"
+msgstr ""
+
+msgid "Coordinate"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Elevation (Aster)"
+msgstr ""
+
+msgid "Elevation (SRTM)"
+msgstr ""
+
+msgid "Enseignement"
+msgstr ""
+
+msgid "Enseignement-2"
+msgstr ""
+
+msgid "Equipement"
+msgstr ""
+
+msgid "Gestion des eaux"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Layers"
+msgstr ""
+
+msgid "Length"
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Measure tools"
+msgstr ""
+
+msgid "Mobile Application"
+msgstr ""
+
+msgid "OSM"
+msgstr ""
+
+msgid "OSM function"
+msgstr ""
+
+msgid "Patrimoine"
+msgstr ""
+
+msgid "Paysage"
+msgstr ""
+
+msgid "Swiss grid (LV03)"
+msgstr ""
+
+msgid "Themes"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Transport"
+msgstr ""
+
+msgid "Wgs Coord."
+msgstr ""
+
+msgid "Wgs Coord. DMS"
+msgstr ""
+
+msgid "aster"
+msgstr ""
+
+msgid "srtm"
+msgstr ""
+
+msgid "test"
+msgstr ""
