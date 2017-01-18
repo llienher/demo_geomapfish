@@ -35,8 +35,6 @@ vars:
         # The list of functionalities that can be configured
         # through the admin interface.
         available_functionalities:
-        - default_basemap
-        - mobile_default_theme
         - location
 
     functionalities:

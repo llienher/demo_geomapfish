@@ -25,6 +25,7 @@
 /mapserver/*/*.map
 /mapserver/tinyows.xml
 /mapserver/ms_error.log
+/print/config.yaml
 /print/WEB-INF/lib/*.jar
 /print/WEB-INF/classes/logback.xml
 /print/print-apps/demo/config.yaml
