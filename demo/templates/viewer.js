@@ -76,6 +76,9 @@ Ext.onReady(function() {
         serverResolutions: [4000,3750,3500,3250,3000,2750,2500,2250,2000,1750,1500,1250,1000,750,650,500,250,100,50,20,10,5,2.5,2,1.5,1,0.5,0.25,0.1,05]
     }, WMTS_BASE_OPTIONS);
 
+    // For featureGrid plugin
+    var blCustomMenuActionPlugin = null;
+
     app = new gxp.Viewer({
         portalConfig: {
             ctCls: 'x-map',
@@ -210,6 +213,21 @@ Ext.onReady(function() {
             outputTarget: "featuregrid-container",
             csvIncludeHeader: true,
             globalSelection: true,
+            customActionMenuHandlers: [{
+                menuHandler: function() {
+                    if (!blCustomMenuActionPlugin) {
+                        blCustomMenuActionPlugin = new bl.CustomMenuActionPlugin(this);
+                    }
+                    var actionMainMenu = this.selectionActionButton.menu;
+                    // Create and add the menu if it should be added.
+                    // Otherwise remove it if exists
+                    if (blCustomMenuActionPlugin.buttonMustBeAdded()) {
+                        blCustomMenuActionPlugin.addCustomMenu();
+                    } else if (!blCustomMenuActionPlugin.buttonMustBeAdded()) {
+                        blCustomMenuActionPlugin.removeCustomMenu();
+                    }
+                }
+            }],
 % else:
             ptype: "cgxp_featureswindow",
             themes: THEMES,

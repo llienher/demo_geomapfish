@@ -1,4 +1,5 @@
 OpenLayers.Util.extend(OpenLayers.Lang.fr, {
+    "Edit these features": "Editer ces objects",
     "layertree": "Thèmes",
 
     "osrm_demo": "OSRM demo",
