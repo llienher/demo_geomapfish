@@ -19,19 +19,30 @@
 Ext.namespace("bl");
 
 /** api: constructor
- *  .. class:: CustomMenuActionPlugin(ctx)
+ *  .. class:: CustomMenuActionPlugin(config)
  *
  * Plugin to add a multiAttributeEdition button to the feature grid action menu.
- * You must pass the context of the featureGrid to create it.
+ * You must pass a config object with:
+ *  'ctx' (Object), the context of the featureGrid to create it.
+ *  'layerToUrl' (Object.<string, string>), a key-value object with the layer
+ *  name concerned by this plugin as key and corresponding url to open as value.
+ *
  */
-bl.CustomMenuActionPlugin = function(ctx) {
+bl.CustomMenuActionPlugin = function(config) {
     return {
         /** private: property[ctx]
          *  ``Object``
          * Context of the featureGrid plugin
          */
-        _ctx: ctx,
-    
+        _ctx: config.ctx || {},
+
+        /** private: property[layerToUrl]
+         *  ``Object``
+         * A key-value (string-string) object with the layer name concerned by
+         * this plugin as key and corresponding url to open as value.
+         */
+        _layerToUrl: config.layerToUrl || {},
+
         /** api: method[buttonMustBeAdded]
          *  True if the button must be added to the menu in the urrent context.
          *
@@ -39,11 +50,7 @@ bl.CustomMenuActionPlugin = function(ctx) {
          */
         buttonMustBeAdded: function() {
             // Is the layer on which we want the multiple edition button ?
-            var layersToEnableTheButton = [
-                OpenLayers.i18n('polygon'),
-                OpenLayers.i18n('point')
-            ];
-            var isGoodLayer = layersToEnableTheButton.indexOf(
+            var isGoodLayer = Object.keys(this._layerToUrl).indexOf(
                     this._ctx.currentGrid.title) > -1;
             // Have the data a fid ?
             var hasIds = function() {
@@ -78,7 +85,8 @@ bl.CustomMenuActionPlugin = function(ctx) {
                                 ids.push(fid.split('.')[1]);
                             }
                         }
-                        window.location = 'https://example.com/?ids=' + ids.join(',');
+                        var baseUrl = this._layerToUrl[this._ctx.currentGrid.title];
+                        window.location = baseUrl + '?ids=' + ids.join(',');
                     }.bind(this)
                 }
     

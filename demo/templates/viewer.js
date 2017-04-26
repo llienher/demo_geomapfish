@@ -215,12 +215,21 @@ Ext.onReady(function() {
             globalSelection: true,
             customActionMenuHandlers: [{
                 menuHandler: function() {
+                    // If the plugin doesn't exist, create it.
                     if (!blCustomMenuActionPlugin) {
-                        blCustomMenuActionPlugin = new bl.CustomMenuActionPlugin(this);
+                        var layerToUrl = {};
+                        // Object with the layer name concerned by this
+                        // plugin as key and corresponding url to open as value.
+                        layerToUrl[OpenLayers.i18n('polygon')] = 'https://example.com/';
+                        layerToUrl[OpenLayers.i18n('point')] = 'http://geomapfish.org/';
+                        blCustomMenuActionPlugin = new bl.CustomMenuActionPlugin({
+                            ctx: this,
+                            layerToUrl: layerToUrl                   
+                        });
                     }
-                    var actionMainMenu = this.selectionActionButton.menu;
                     // Create and add the menu if it should be added.
                     // Otherwise remove it if exists
+                    var actionMainMenu = this.selectionActionButton.menu;
                     if (blCustomMenuActionPlugin.buttonMustBeAdded()) {
                         blCustomMenuActionPlugin.addCustomMenu();
                     } else if (!blCustomMenuActionPlugin.buttonMustBeAdded()) {
