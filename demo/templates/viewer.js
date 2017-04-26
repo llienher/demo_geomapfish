@@ -77,7 +77,7 @@ Ext.onReady(function() {
     }, WMTS_BASE_OPTIONS);
 
     // For featureGrid plugin
-    var blCustomMenuActionPlugin = null;
+    var bsCustomMenuActionPlugin = null;
 
     app = new gxp.Viewer({
         portalConfig: {
@@ -216,13 +216,13 @@ Ext.onReady(function() {
             customActionMenuHandlers: [{
                 menuHandler: function() {
                     // If the plugin doesn't exist, create it.
-                    if (!blCustomMenuActionPlugin) {
+                    if (!bsCustomMenuActionPlugin) {
                         var layerToUrl = {};
                         // Object with the layer name concerned by this
                         // plugin as key and corresponding url to open as value.
                         layerToUrl[OpenLayers.i18n('polygon')] = 'https://example.com/';
                         layerToUrl[OpenLayers.i18n('point')] = 'http://geomapfish.org/';
-                        blCustomMenuActionPlugin = new bl.CustomMenuActionPlugin({
+                        bsCustomMenuActionPlugin = new bs.CustomMenuActionPlugin({
                             ctx: this,
                             layerToUrl: layerToUrl                   
                         });
@@ -230,10 +230,10 @@ Ext.onReady(function() {
                     // Create and add the menu if it should be added.
                     // Otherwise remove it if exists
                     var actionMainMenu = this.selectionActionButton.menu;
-                    if (blCustomMenuActionPlugin.buttonMustBeAdded()) {
-                        blCustomMenuActionPlugin.addCustomMenu();
-                    } else if (!blCustomMenuActionPlugin.buttonMustBeAdded()) {
-                        blCustomMenuActionPlugin.removeCustomMenu();
+                    if (bsCustomMenuActionPlugin.buttonMustBeAdded()) {
+                        bsCustomMenuActionPlugin.addCustomMenu();
+                    } else if (!bsCustomMenuActionPlugin.buttonMustBeAdded()) {
+                        bsCustomMenuActionPlugin.removeCustomMenu();
                     }
                 }
             }],

@@ -12,11 +12,11 @@
  * GNU General Public License for more details.
 
 /** api: (define)
- *  module = bl
+ *  module = bs
  *  class = Global
  */
 
-Ext.namespace("bl");
+Ext.namespace("bs");
 
 /** api: constructor
  *  .. class:: CustomMenuActionPlugin(config)
@@ -28,7 +28,7 @@ Ext.namespace("bl");
  *  name concerned by this plugin as key and corresponding url to open as value.
  *
  */
-bl.CustomMenuActionPlugin = function(config) {
+bs.CustomMenuActionPlugin = function(config) {
     return {
         /** private: property[ctx]
          *  ``Object``
