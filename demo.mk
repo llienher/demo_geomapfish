@@ -18,3 +18,5 @@ DEPLOY_BRANCH_MAKEFILE ?= demo.mk
 CONFIG_VARS += dbsessions
 
 include CONST_Makefile
+
+NGEO_LIBS_JS_FILES += node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js

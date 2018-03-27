@@ -5,6 +5,7 @@
     "@camptocamp/closure-util": "1.23.0",
     "angular": "1.6.5",
     "angular-animate": "1.6.5",
+    "angular-ui-bootstrap":"2.5.6",
     "angular-dynamic-locale": "0.1.32",
     "angular-float-thead": "0.1.2",
     "angular-gettext": "2.3.10",
